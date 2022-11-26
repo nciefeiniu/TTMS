@@ -96,9 +96,9 @@ WSGI_APPLICATION = 'TTMS.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'TTMS',   # 如果没有一定要创建
+        'NAME': 'ttms',   # 如果没有一定要创建
         'USER': 'root',
-        'PASSWORD': 'redhat',
+        'PASSWORD': '123456',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
