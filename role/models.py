@@ -5,5 +5,5 @@ from authority.models import Auth
 
 
 class Role(models.Model):
-    name=models.CharField(max_length=20)
-    auths=models.ManyToManyField(Auth)
+    name = models.CharField(max_length=20)
+    auths = models.ManyToManyField(Auth)

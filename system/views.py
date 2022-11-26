@@ -30,9 +30,6 @@ def is_login(func):
 def is_auth(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
-        # if not request.user.is_authenticated():
-        #     return redirect(reverse('login'))
-
         print('============')
         id = request.session.get('user_id', None)
         print(id)
@@ -70,21 +67,12 @@ def check_schedule(func):
         datetime_showtime = datetime_showtime.replace(tzinfo=pytz.timezone('UTC'))
         schedules = Schedule.objects.all()
         for schedule in schedules:
-            # print(type(studio),type(schedule.studio.id))
-            if int(studio) == schedule.studio.id and datetime_showtime >= schedule.show_time and datetime_showtime <= (
+            if int(studio) == schedule.studio.id and schedule.show_time <= datetime_showtime <= (
                     schedule.end_time + datetime.timedelta(hours=1)):
                 messages.info(request, "演出时间冲突！")
                 return redirect(reverse('schedule_add'))
         else:
-
             return func(request, *args, **kwargs)
-
-            # print(schedule.show_time, schedule.end_time, '**********', datetime_showtime >= schedule.show_time)
-
-            # print(schedule.show_time,schedule.end_time,'============',datetime_showtime>=schedule.show_time)
-
-        # return func(request,*args,**kwargs)
-
     return wrapper
 
 
