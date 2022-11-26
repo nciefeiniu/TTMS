@@ -8,6 +8,7 @@ from authority.models import Auth
 from role.models import Role
 from system.views import is_auth, is_login
 
+
 @is_login
 @is_auth
 def list(request):
@@ -24,14 +25,16 @@ def list(request):
         'roles': roles,
         'rolesPageObj': rolesPageObj
     })
+
+
 @is_login
 @is_auth
 def add(request):
-    auths=Auth.objects.all()
-    if request.method=='POST':
-        name=request.POST['name']
-        auths=request.POST.getlist('auths')
-        role=Role(name=name)
+    auths = Auth.objects.all()
+    if request.method == 'POST':
+        name = request.POST['name']
+        auths = request.POST.getlist('auths')
+        role = Role(name=name)
         role.save()
         for auth in auths:
             role.auths.add(int(auth))
@@ -39,39 +42,40 @@ def add(request):
         role.save()
 
         return redirect(reverse('role_list'))
-    return render(request,'role/add.html',context={
-        'auths':auths
+    return render(request, 'role/add.html', context={
+        'auths': auths
     })
+
+
 @is_login
 @is_auth
-def edit(request,id):
-    role=get_object_or_404(Role,id=id)
-    auths=Auth.objects.all()
-    if request.method=='POST':
-        name=request.POST['name']
-        auths_list =[str(auth.id) for auth in role.auths.all()]
-        auths=request.POST.getlist('auths')
+def edit(request, id):
+    role = get_object_or_404(Role, id=id)
+    auths = Auth.objects.all()
+    if request.method == 'POST':
+        name = request.POST['name']
+        auths_list = [str(auth.id) for auth in role.auths.all()]
+        auths = request.POST.getlist('auths')
 
-
-        if name!=role.name:
-            role.name=name
+        if name != role.name:
+            role.name = name
             role.save()
-        if auths!=auths_list:
+        if auths != auths_list:
             role.auths.clear()
             for auth in auths:
                 role.auths.add(int(auth))
             role.save()
         return redirect(reverse('role_list'))
 
-
-    return render(request,'role/edit.html',context={
-        'role':role,
-        'auths':auths,
+    return render(request, 'role/edit.html', context={
+        'role': role,
+        'auths': auths,
     })
+
+
 @is_login
 @is_auth
-def delete(request,id):
-
-    role=get_object_or_404(Role,id=id)
+def delete(request, id):
+    role = get_object_or_404(Role, id=id)
     role.delete()
     return redirect(reverse('role_list'))

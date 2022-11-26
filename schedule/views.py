@@ -18,7 +18,7 @@ from system.views import check_schedule, is_auth, is_login
 @is_login
 @is_auth
 def list(request):
-    schedules=Schedule.objects.all()
+    schedules = Schedule.objects.all()
     PageObj = Paginator(schedules, per_page=5)
     page = request.GET.get('page', 1)
     try:
@@ -31,6 +31,7 @@ def list(request):
         'schedules': schedules,
         'schedulesPageObj': schedulesPageObj
     })
+
 
 @check_schedule
 def add_schedule(request):
@@ -60,20 +61,24 @@ def add_schedule(request):
 
     schedule.save()
     return redirect(reverse('schedule_list'))
+
+
 @is_login
 @is_auth
 def add(request):
-    plays=Play.objects.all()
-    studios=Studio.objects.all()
-    if request.method=='POST':
+    plays = Play.objects.all()
+    studios = Studio.objects.all()
+    if request.method == 'POST':
         return add_schedule(request)
 
-    return render(request,'schedule/add.html',context={
-        'plays':plays,
-        'studios':studios
+    return render(request, 'schedule/add.html', context={
+        'plays': plays,
+        'studios': studios
     })
+
+
 @check_schedule
-def edit_schedule(request,schedule):
+def edit_schedule(request, schedule):
     play = request.POST['play']
     studio = request.POST['studio']
     show_time = request.POST['show_time']
@@ -100,26 +105,30 @@ def edit_schedule(request,schedule):
         schedule.end_time = end_time
     schedule.save()
     return redirect(reverse('schedule_list'))
-@is_login
-@is_auth
-def edit(request,id):
-    schedule=get_object_or_404(Schedule,id=id)
-    plays=Play.objects.all()
-    studios=Studio.objects.all()
-    if request.method=='POST':
-        return edit_schedule(request,schedule)
 
-    return render(request,'schedule/edit.html',context={
-        'schedule':schedule,
-        'plays':plays,
-        'studios':studios
-    })
+
 @is_login
 @is_auth
-def delete(request,id):
-    schedule=get_object_or_404(Schedule,id=id)
+def edit(request, id):
+    schedule = get_object_or_404(Schedule, id=id)
+    plays = Play.objects.all()
+    studios = Studio.objects.all()
+    if request.method == 'POST':
+        return edit_schedule(request, schedule)
+
+    return render(request, 'schedule/edit.html', context={
+        'schedule': schedule,
+        'plays': plays,
+        'studios': studios
+    })
+
+
+@is_login
+@is_auth
+def delete(request, id):
+    schedule = get_object_or_404(Schedule, id=id)
     schedule.delete()
-    messages.info(request,'电影%s的演出计划已删除' %(schedule.play.name))
+    messages.info(request, '电影%s的演出计划已删除' % (schedule.play.name))
     return redirect(reverse('schedule_list'))
 
 # https://templatemag.com/demo/templates/Dashio/advanced_form_components.html

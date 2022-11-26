@@ -11,7 +11,7 @@ from system.views import is_login, is_auth
 @is_login
 @is_auth
 def list(request):
-    auths=Auth.objects.all()
+    auths = Auth.objects.all()
 
     PageObj = Paginator(auths, per_page=5)
     page = request.GET.get('page', 1)
@@ -25,34 +25,39 @@ def list(request):
         'auths': auths,
         'authsPageObj': authsPageObj
     })
+
+
 @is_login
 @is_auth
 def add(request):
-    if request.method=='POST':
-        name=request.POST['name']
-        url=request.POST['url']
-        auth=Auth(name=name,url=url)
+    if request.method == 'POST':
+        name = request.POST['name']
+        url = request.POST['url']
+        auth = Auth(name=name, url=url)
         auth.save()
         return redirect(reverse('auth_list'))
 
-    return render(request,'authority/add.html')
-def edit(request,id):
-    auth=get_object_or_404(Auth,id=id)
-    if request.method=='POST':
+    return render(request, 'authority/add.html')
+
+
+def edit(request, id):
+    auth = get_object_or_404(Auth, id=id)
+    if request.method == 'POST':
         name = request.POST['name']
         url = request.POST['url']
-        if name!=auth.name or url!=auth.url:
-            auth.name=name
-            auth.url=url
+        if name != auth.name or url != auth.url:
+            auth.name = name
+            auth.url = url
             auth.save()
         return redirect(reverse('auth_list'))
-    return render(request,'authority/edit.html',context={
-        'auth':auth,
+    return render(request, 'authority/edit.html', context={
+        'auth': auth,
     })
+
+
 @is_login
 @is_auth
-def delete(request,id):
-    auth=get_object_or_404(Auth,id=id)
+def delete(request, id):
+    auth = get_object_or_404(Auth, id=id)
     auth.delete()
     return redirect(reverse('auth_list'))
-
